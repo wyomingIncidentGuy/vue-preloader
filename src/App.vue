@@ -1,11 +1,11 @@
 <template>
-  <div class="black"></div>
-  <div class="beige"></div>
+  <div class="black" :style="{width: this.blackWidth + '%'}"></div>
+  <div class="beige" :style="{width: this.beigeWidth + '%'}"></div>
   <div class="text__wrapper">
     <transition name="slide-fade">
-      <div class ="counter" v-if="this.timer < 101">
+      <div class ="counter" v-if="this.timer < 100">
         <div class = "text">
-          <p>{{ this.timer }}</p>
+          <p>{{ Math.round(this.timer) }}</p>
         </div>
       </div>
     </transition>
@@ -23,22 +23,33 @@ export default {
   methods:{
     loadingIncrement(){
       const interval = setInterval(() => {
-        this.timer++;
+        this.timer+=0.1;
 
-        if(this.timer == 101){
+        if(this.timer > 100){
           clearInterval(interval);
         }
-      }, 30);
+      }, 1);
     },
 
   },
 
   computed:{
-    
+    blackWidth(){
+      if(this.timer > 100){
+        return 100;
+      }
+      else{
+        return this.timer;
+      }
+    },
+
+    beigeWidth(){
+      return Math.max(0, 100 - this.timer);
+    }
   },
 
   watch:{
-
+    
   },
 
   mounted() {
@@ -51,24 +62,6 @@ export default {
   @font-face {
     font-family: 'Forum';
     src: url('./assets/fonts/Forum-Regular.ttf');
-  }
-
-  @keyframes increase{
-    from{
-      width: 0%;
-    }
-    to{
-      width: 100%;
-    }
-  }
-
-  @keyframes decrease{
-    from{
-      width: 100%;
-    }
-    to{
-      width: 0%;
-    }
   }
 
   * {
@@ -91,18 +84,14 @@ export default {
     position: absolute;
     right: 0;
     background:  #AB8867;
-    width: 100%;
     min-height: 100vh;
-    animation: decrease 3s forwards;
   }
 
   .black{
     position: absolute;
     left:0;
-    width: 0%;
     height: 100vh;
     background-color: #1D1D1D;
-    animation: increase 3s forwards;
   }
 
   .counter{
